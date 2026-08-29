@@ -71,7 +71,7 @@ static int translate_readonly(const char *file)
 	char *firmware_path;
 	char firmware_attr[32];
 	char path[PATH_MAX];
-	char fw_sysfs_path[PATH_MAX];
+	char fw_sysfs_path[PATH_MAX] = {0};
 	struct dirent *de;
 	int firmware_fd;
 	DIR *class_dir;
@@ -80,6 +80,20 @@ static int translate_readonly(const char *file)
 	int fd = -1;
 
 	read_fw_path_from_sysfs(fw_sysfs_path, sizeof(fw_sysfs_path));
+
+	if (fw_sysfs_path[0]) {
+		snprintf(path, sizeof(path), "%s/%s", fw_sysfs_path, file);
+		fd = open_maybe_compressed(path);
+		if (fd >= 0) {
+			return fd;
+		}
+	}
+
+	snprintf(path, sizeof(path), "%s%s", FIRMWARE_BASE, file);
+	fd = open_maybe_compressed(path);
+	if (fd >= 0) {
+		return fd;
+	}
 
 	class_fd = open("/sys/class/remoteproc", O_RDONLY | O_DIRECTORY);
 	if (class_fd < 0) {

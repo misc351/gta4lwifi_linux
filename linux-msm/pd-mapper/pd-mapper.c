@@ -75,7 +75,6 @@ static void handle_get_domain_list(int sock, const struct qrtr_packet *pkt)
 	}
 
 	req.name[sizeof(req.name)-1] = '\0';
-
 	resp.result.result = QMI_RESULT_SUCCESS;
 	resp.db_revision_valid = 1;
 	resp.db_revision = 1;
@@ -404,7 +403,9 @@ int main(int argc, char **argv)
 	int ret;
 	int fd;
 
-	ret = pd_load_maps();
+	ret = pd_load_map("/lib/firmware/modemr.jsn");
+	if (!ret)
+		ret = pd_load_map("/lib/firmware/modemuw.jsn");
 	if (ret)
 		exit(1);
 
