@@ -295,6 +295,11 @@
 				};
 			};
 		};
+
+		scm {
+			compatible = "qcom,scm-sm6115", "qcom,scm";
+			#reset-cells = <0x01>;
+		};
 	};
 
 	reserved-memory {
@@ -494,6 +499,14 @@
 			no-map;
 			reg = <0x00 0x71400000 0x00 0x800000>;
 			phandle = <0x1ce>;
+		};
+
+		rmtfs_mem@89b01000 {
+			compatible = "qcom,rmtfs-mem";
+			reg = <0x00 0x89b01000 0x00 0x200000>;
+			no-map;
+			qcom,client-id = <0x01>;
+			qcom,vmid = <0x0f 0x2b>;
 		};
 	};
 
@@ -3345,15 +3358,6 @@
 			compatible = "qcom,rpmcc-bengal";
 			#clock-cells = <0x01>;
 			phandle = <0x10>;
-		};
-
-		qcom,rmtfs_sharedmem@0 {
-			compatible = "qcom,sharedmem-uio";
-			reg = <0x00 0x200000>;
-			reg-names = "rmtfs";
-			qcom,client-id = <0x01>;
-			qcom,guard-memory;
-			qcom,vm-nav-path;
 		};
 
 		qcom,gcc@1400000 {
