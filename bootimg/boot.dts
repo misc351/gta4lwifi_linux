@@ -9902,14 +9902,15 @@
 			qcom,wakeup-byte = <0xfd>;
 			status = "ok";
 			phandle = <0x2dd>;
-                        bluetooth {
-                                compatible = "qcom,wcn3990-bt";
-                                vddio-supply = <0x12>;
-                                vddxo-supply = <0x15>;
-                                vddrf-supply = <0x13>;
-                                vddch0-supply = <0x14>;
-				max-speed = <3200000>;
-                        };
+
+			bluetooth {
+				compatible = "qcom,wcn3990-bt";
+				vddio-supply = <0x12>;
+				vddxo-supply = <0x15>;
+				vddrf-supply = <0x13>;
+				vddch0-supply = <0x14>;
+				max-speed = <0x30d400>;
+			};
 		};
 
 		i2c@4a80000 {
