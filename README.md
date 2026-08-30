@@ -65,9 +65,10 @@ chroot /mnt apt update
 chroot /mnt apt install systemd systemd-sysv dbus udev kmod iproute2 iptables iputils-ping openssh-server nftables procps util-linux ca-certificates curl wget nano htop fastfetch sudo rmtfs tqftpserv qrtr-tools protection-domain-mapper network-manager rfkill bluez file busybox-static wpasupplicant iw usbutils procps maliit-keyboard firmware-atheros
 ```
 
-download rootfs_copy from releases
+download rootfs_dummy.tar.gz from releases
+*after extracting, replace rootfs_dummy/usr/lib/firmware with actual binaries before copy.
 ```cmd
-cp -a rootfs_copy/. /mnt
+cp -a rootfs_dummy/. /mnt
 ```
 
 chroot
@@ -133,11 +134,6 @@ install patched sddm-0.20.0
 cd /programs
 apt install ./sddm_0.20.0-bookworm_arm64.deb
 ```
-
-
-force software rednering, since current port lacks gpu support
-(bookworm ships plasma 5.xx, could not port kde gpu accel)
-(gpu works ok, but observed collides with this kde version)
 
 
 ## Runtime cmd
