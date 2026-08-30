@@ -1,0 +1,15 @@
+[Unit]
+Description=Start wifi service
+After=local-fs.target
+ConditionPathExists=/dev/subsys_modem
+ConditionPathExists=/usr/lib/firmware/wlan/qca_cld/bdwlan.bin
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/startwifi
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target

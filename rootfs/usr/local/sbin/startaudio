@@ -1,0 +1,29 @@
+#!/bin/sh
+set -e
+
+modprobe apr_dlkm || true
+modprobe q6_dlkm || true
+modprobe adsp_loader_dlkm || true
+
+echo 1 > /sys/kernel/boot_adsp/boot
+
+i=0
+while [ "$(cat /sys/bus/msm_subsys/devices/subsys0/state 2>/dev/null)" != "ONLINE" ]; do
+    sleep 0.1
+    i=$((i + 1))
+    [ "$i" -gt 200 ] && {
+        echo "ADSP fail"
+        exit 1
+    }
+done
+
+modprobe swr_dlkm
+modprobe swr_ctrl_dlkm
+modprobe va_macro_dlkm
+modprobe rx_macro_dlkm
+modprobe tx_macro_dlkm
+modprobe wcd937x_slave_dlkm
+modprobe wcd937x_dlkm
+modprobe stub_dlkm
+sleep 1
+modprobe machine_dlkm

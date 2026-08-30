@@ -1,0 +1,59 @@
+#!/bin/bash
+set -eu
+
+WLFW=/usr/local/sbin/wlfw
+BDF=/usr/lib/firmware/wlan/qca_cld/bdwlan.bin
+
+printf '%s' /usr/lib/firmware \
+    > /sys/module/firmware_class/parameters/path
+
+systemctl restart rmtfs
+systemctl restart pd-mapper
+systemctl restart tqftpserv
+
+exec 3</dev/subsys_modem
+
+sleep 3
+
+NODE=
+PORT=
+
+for i in $(seq 1 45); do
+    read -r NODE PORT < <(
+        qrtr-lookup | awk '$1 == 69 {print $4, $5; exit}'
+    ) || true
+
+    if [ -n "${NODE:-}" ] && [ -n "${PORT:-}" ]; then
+        break
+    fi
+
+    NODE=
+    PORT=
+    sleep 1
+done
+
+if [ -z "${NODE:-}" ] || [ -z "${PORT:-}" ]; then
+    echo "service 69 not found"
+    exit 1
+fi
+
+
+"$WLFW" "$NODE" "$PORT" "$BDF"
+
+modprobe wlan
+
+for i in $(seq 1 20); do
+    [ -e /dev/wlan ] && break
+    sleep 1
+done
+
+if [ ! -e /dev/wlan ]; then
+    echo "/dev/wlan missing"
+    exit 1
+fi
+
+printf 'ON\n' > /dev/wlan
+
+while :; do
+    sleep 3600
+done
