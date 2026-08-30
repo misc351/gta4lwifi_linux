@@ -1,0 +1,2 @@
+PARTLABEL=apnhlos /vendor/firmware_mnt vfat ro,nofail 0 0
+PARTLABEL=modem  /vendor/firmware-modem  vfat  ro,shortname=lower,nofail  0  0
